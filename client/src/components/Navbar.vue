@@ -28,16 +28,16 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters } from 'vuex';
 
 export default {
-  name: "navbar",
-  computed: mapGetters("auth", ["isAuthenticated", "isSuperUser"]),
+  name: 'navbar',
+  computed: mapGetters('auth', ['isAuthenticated', 'isSuperUser']),
   mounted() {
     if (this.isSuperUser == null) {
-      this.$store.dispatch("auth/getUserRole");
+      this.$store.dispatch('auth/getUserRole');
     }
-  }
+  },
 };
 </script>
 

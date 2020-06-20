@@ -24,12 +24,12 @@ const initialState = {
   token: null,
   userData: null,
   isSuperUser: null,
-  errorMsg: ""
+  errorMsg: '',
 };
 
 const getters = {
   isAuthenticated: state => !!state.token,
-  isSuperUser: state => state.isSuperUser
+  isSuperUser: state => state.isSuperUser,
 };
 
 const actions = {
@@ -44,10 +44,11 @@ const actions = {
       .catch(() => commit(LOGIN_FAILURE));
   },
   getUserRole({ commit }) {
-    return auth.getFullUserInfo().then(({ data }) => {
-      console.log(data);
-      commit(SET_USER_ROLE, data.is_superuser);
-    })
+    return auth.getFullUserInfo()
+      .then(({ data }) => {
+        console.log(data);
+        commit(SET_USER_ROLE, data.is_superuser);
+      }).catch((err) => {});
   },
   getAccountDetails({ commit }) {
     commit(LOADING_START);
@@ -59,9 +60,7 @@ const actions = {
   updateUser({ commit }, data) {
     return new Promise((resolve) => {
       auth.updateAccountDetails(data)
-        .then(() => {
-          return resolve(true)
-        })
+        .then(() => resolve(true))
         .catch((err) => {
           console.log(err.response.data.detail);
           commit(LOADING_FAILURE, err.response.data.detail);
@@ -91,13 +90,13 @@ const mutations = {
   [LOGIN_BEGIN](state) {
     state.authenticating = true;
     state.error = false;
-    state.errorMsg = "";
+    state.errorMsg = '';
   },
   [LOGIN_FAILURE](state) {
     state.authenticating = false;
     state.error = true;
   },
-  [LOADING_FAILURE](state, errorMsg = "") {
+  [LOADING_FAILURE](state, errorMsg = '') {
     state.error = true;
     state.errorMsg = errorMsg;
   },

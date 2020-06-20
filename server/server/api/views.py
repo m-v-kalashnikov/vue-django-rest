@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework.decorators import detail_route
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
@@ -57,7 +58,10 @@ class ShopViewSet(ModelViewSet):
 @api_view(('GET',))
 def user_info(request):
     user_id = request.user.id
-    user = User.objects.get(id=user_id)
+    # user = User.objects.get(id=user_id)
+
+    # As for me it gives better response
+    user = get_object_or_404(User, id=user_id)
 
     return JsonResponse({
         'username': user.username,

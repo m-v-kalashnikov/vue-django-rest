@@ -29,6 +29,6 @@ export default {
     return session.post('/registration/verify-email/', { key });
   },
   getFullUserInfo() {
-    return session.get("/api/current_user_info");
-  }
+    return session.get('/api/current_user_info');
+  },
 };
