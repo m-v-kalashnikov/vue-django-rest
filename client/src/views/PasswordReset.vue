@@ -3,7 +3,7 @@
   <div class="password-reset-view">
     <template v-if="!emailCompleted">
       <b-card
-        title="Create Account"
+        title="Password Reset"
       >
       <b-form @submit="onSubmit" @reset="onReset" class="reset-form">
         <b-form-group
@@ -27,12 +27,12 @@
           <b-button type="reset" variant="danger">Reset</b-button>
         </div>
         <b-badge href="#" variant="danger" v-show="emailError">
-          An error occured while processing your request.
+          An error occured while processing your reddddquest.
         </b-badge>
       </b-form>
       </b-card>
       <div class="mt-4">
-        Return to Login page 
+        Return to Login page
         <router-link to="/login">Login</router-link>
       </div>
     </template>
@@ -61,19 +61,19 @@ export default {
     'emailLoading',
   ]),
   methods: {
-    ... mapActions('password', [
-    'sendResetEmail',
-    'clearEmailStatus',
-  ]),
-  
+    ...mapActions('password', [
+      'sendPasswordResetEmail',
+      'clearEmailStatus',
+    ]),
+
     onSubmit(evt) {
       evt.preventDefault();
-      this.sendResetEmail(this.form);
+      this.sendPasswordResetEmail(this.form);
     },
     onReset(evt) {
       evt.preventDefault();
-      this.form.email = "";
-    }
+      this.form.email = '';
+    },
   },
   beforeRouteLeave(to, from, next) {
     this.clearEmailStatus();

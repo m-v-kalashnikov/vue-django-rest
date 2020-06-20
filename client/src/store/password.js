@@ -8,7 +8,7 @@ import {
   PASSWORD_EMAIL_BEGIN,
   PASSWORD_EMAIL_CLEAR,
   PASSWORD_EMAIL_FAILURE,
-  PASSWORD_EMAIL_SUCCESS,
+  PASSWORD_EMAIL_SUCCESS, REGISTRATION_FAILURE,
 } from './types';
 
 export default {
@@ -20,13 +20,14 @@ export default {
     resetCompleted: false,
     resetError: false,
     resetLoading: false,
+    errorMsg: '',
   },
   actions: {
     resetPassword({ commit }, { uid, token, password1, password2 }) {
       commit(PASSWORD_RESET_BEGIN);
       return auth.resetAccountPassword(uid, token, password1, password2)
         .then(() => commit(PASSWORD_RESET_SUCCESS))
-        .catch(() => commit(PASSWORD_RESET_FAILURE));
+        .catch(err => commit(PASSWORD_RESET_FAILURE, err.response.data));
     },
     sendPasswordResetEmail({ commit }, { email }) {
       commit(PASSWORD_EMAIL_BEGIN);
@@ -50,9 +51,10 @@ export default {
       state.resetError = false;
       state.resetLoading = false;
     },
-    [PASSWORD_RESET_FAILURE](state) {
+    [PASSWORD_RESET_FAILURE](state, errData) {
       state.resetError = true;
       state.resetLoading = false;
+      state.errorMsg = errData;
     },
     [PASSWORD_RESET_SUCCESS](state) {
       state.resetCompleted = true;
