@@ -60,6 +60,15 @@
         <b-badge href="#" variant="danger" v-show="registrationError">
           An error occured while processing your request.
         </b-badge>
+        <b-list-group v-show="registrationError">
+          <b-list-group-item variant="danger"
+                             v-for="(field, error, i) in errorMsg"
+                             :key="i">
+            <b-list-group-item variant="danger" v-for="(text, i) in field" :key="i">
+              {{text}}
+            </b-list-group-item>
+          </b-list-group-item>
+        </b-list-group>
       </b-form>
       </b-card>
       <div class="mt-4">
@@ -98,6 +107,7 @@ export default {
     'registrationCompleted',
     'registrationError',
     'registrationLoading',
+    'errorMsg',
   ]),
   methods: {
     ...mapActions('signup', [
@@ -111,11 +121,11 @@ export default {
     onReset(evt) {
       evt.preventDefault();
       // Reset our form values
-      this.form.username = "";
-      this.form.password1 = "";
-      this.form.password2 = "";
-      this.form.email = "";
-    }
+      this.form.username = '';
+      this.form.password1 = '';
+      this.form.password2 = '';
+      this.form.email = '';
+    },
   },
   beforeRouteLeave(to, from, next) {
     this.clearRegistrationStatus();

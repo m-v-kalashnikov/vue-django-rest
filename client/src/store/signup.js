@@ -20,13 +20,14 @@ export default {
     registrationCompleted: false,
     registrationError: false,
     registrationLoading: false,
+    errorMsg: '',
   },
   actions: {
     createAccount({ commit }, { username, password1, password2, email }) {
       commit(REGISTRATION_BEGIN);
       return auth.createAccount(username, password1, password2, email)
         .then(() => commit(REGISTRATION_SUCCESS))
-        .catch(() => commit(REGISTRATION_FAILURE));
+        .catch(err => commit(REGISTRATION_FAILURE, err.response.data));
     },
     activateAccount({ commit }, { key }) {
       commit(ACTIVATION_BEGIN);
@@ -61,15 +62,18 @@ export default {
     },
     [REGISTRATION_BEGIN](state) {
       state.registrationLoading = true;
+      state.errorMsg = '';
+      state.registrationError = false;
     },
     [REGISTRATION_CLEAR](state) {
       state.registrationCompleted = false;
       state.registrationError = false;
       state.registrationLoading = false;
     },
-    [REGISTRATION_FAILURE](state) {
+    [REGISTRATION_FAILURE](state, errData) {
       state.registrationError = true;
       state.registrationLoading = false;
+      state.errorMsg = errData;
     },
     [REGISTRATION_SUCCESS](state) {
       state.registrationCompleted = true;
