@@ -28,10 +28,22 @@
         ></b-form-input>
       </b-form-group>
       <div class="d-flex justify-content-center">
-        <b-button class="mr-3" type="submit" variant="primary">Login</b-button>
+        <b-button class="mr-3" type="submit" variant="primary" :disabled="loading">
+          <b-spinner label="Spinning" variable="success" v-if="loading" class="mr-3"></b-spinner>
+          Login
+        </b-button>
         <b-button type="reset" variant="danger">Reset</b-button>
       </div>
     </b-form>
+    <b-list-group class="mt-3" v-show="error">
+        <b-list-group-item variant="danger"
+                           v-for="(field, error, i) in errorMsg"
+                           :key="i">
+          <b-list-group-item variant="danger" v-for="(text, i) in field" :key="i">
+            {{text}}
+          </b-list-group-item>
+        </b-list-group-item>
+      </b-list-group>
     </b-card>
     <div class="mt-4">
       <router-link to="/register">Create Account</router-link>|
@@ -41,20 +53,33 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   data() {
     return {
       form: {
-        username: "",
-        password: ""
-      }
+        username: '',
+        password: '',
+      },
     };
   },
+  // computed: mapState('signup', [
+  //   'registrationCompleted',
+  //   'registrationError',
+  //   'registrationLoading',
+  //   'errorMsg',
+  // ]),
+  computed: mapState('auth', [
+    'error',
+    'loading',
+    'errorMsg',
+  ]),
   methods: {
     login({ username, password }) {
       this.$store
-        .dispatch("auth/login", { username, password })
-        .then(() => this.$router.push("/"));
+        .dispatch('auth/login', { username, password })
+        .then(() => this.$router.push('/')).catch(() => {});
     },
     onSubmit(evt) {
       evt.preventDefault();
@@ -63,10 +88,10 @@ export default {
     onReset(evt) {
       evt.preventDefault();
       // Reset our form values
-      this.form.username = "";
-      this.form.password = "";
-    }
-  }
+      this.form.username = '';
+      this.form.password = '';
+    },
+  },
 };
 </script>
 

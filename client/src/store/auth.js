@@ -41,14 +41,17 @@ const actions = {
         dispatch('getUserRole');
       })
       .then(() => commit(LOGIN_SUCCESS))
-      .catch(() => commit(LOGIN_FAILURE));
+      .catch((err) => {
+        commit(LOGIN_FAILURE, err.response.data);
+        return Promise.reject();
+      });
   },
   getUserRole({ commit }) {
     return auth.getFullUserInfo()
       .then(({ data }) => {
         console.log(data);
         commit(SET_USER_ROLE, data.is_superuser);
-      }).catch((err) => {});
+      }).catch(() => {});
   },
   getAccountDetails({ commit }) {
     commit(LOADING_START);
@@ -91,10 +94,13 @@ const mutations = {
     state.authenticating = true;
     state.error = false;
     state.errorMsg = '';
+    state.loading = true;
   },
-  [LOGIN_FAILURE](state) {
+  [LOGIN_FAILURE](state, errData) {
     state.authenticating = false;
     state.error = true;
+    state.loading = false;
+    state.errorMsg = errData;
   },
   [LOADING_FAILURE](state, errorMsg = '') {
     state.error = true;
@@ -103,6 +109,7 @@ const mutations = {
   [LOGIN_SUCCESS](state) {
     state.authenticating = false;
     state.error = false;
+    state.loading = false;
   },
   [LOGOUT](state) {
     state.authenticating = false;
@@ -137,7 +144,6 @@ const mutations = {
     state.userData = data;
   },
   [SET_USER_ROLE](state, data) {
-    console.log(data);
     state.isSuperUser = data;
   },
 };
