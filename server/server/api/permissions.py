@@ -10,9 +10,9 @@ class SafeMethodsOnly(BasePermission):
 
 
 class AdminOrUserCanEdit(BasePermission):
-    def has_permission(self, request, view):
-        """All users can list or view."""
-        return request.method in SAFE_METHODS
+    # def has_permission(self, request, view):
+    #     """All users can list or view."""
+    #     return request.method in SAFE_METHODS
 
     def has_object_permission(self, request, view, obj=None):
         """Only the user can modify existing instances."""

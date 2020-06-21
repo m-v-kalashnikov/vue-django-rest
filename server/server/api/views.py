@@ -47,7 +47,7 @@ class ShopViewSet(ModelViewSet):
 
     permission_classes = (
         IsAuthenticated,
-        # AdminOrUserCanEdit,
+        AdminOrUserCanEdit,
     )
 
     def perform_create(self, serializer):

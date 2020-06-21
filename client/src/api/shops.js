@@ -12,6 +12,6 @@ export default {
   },
   removeShop(id) {
     return session.delete(`/api/shops/${id}/`);
-  }
+  },
 
 };

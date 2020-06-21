@@ -11,7 +11,7 @@
       <b-list-group-item v-for="(item, idx) in data" :key="idx">
         <div class="d-flex justify-content-between align-items-center">
           <h2>{{item.name}}</h2>
-          <div>
+          <div v-if="adminOrUserCanEdit(item)">
             <b-button variant="success" class="mr-2" size="sm" @click="editShop(item)">
               <i class="fas fa-edit" />
             </b-button>
@@ -53,18 +53,24 @@
             class="mr-3"
             variant="outline-success"
             @click="saveData"
-            :disabled="posting"
-          >Save</b-button>
+            :disabled="posting">
+            <b-spinner label="Spinning" variable="success" v-if="posting" class="mr-3"></b-spinner>
+            Save
+          </b-button>
           <b-button variant="outline-warning" @click="hideModal">Close</b-button>
         </div>
       </b-form>
     </b-modal>
     <b-modal ref="confirm-modal" hide-footer title="Confirm">
+      <b-badge variant="danger" block v-show="errorMsg" class="my-2">{{errorMsg}}</b-badge>
       <div class="d-block text-center">
         <h3>Are you sure to remove this item?</h3>
       </div>
       <div class="d-flex justify-content-end mt-4">
-        <b-button class="mr-3" variant="outline-danger" @click="confirmDelete">Remove</b-button>
+        <b-button class="mr-3" variant="outline-danger" @click="confirmDelete" :disabled="posting">
+          <b-spinner label="Spinning" variable="success" v-if="posting" class="mr-3"></b-spinner>
+          Remove
+        </b-button>
         <b-button variant="outline-secondary" @click="closeConfirmModal">Cancel</b-button>
       </div>
     </b-modal>
@@ -72,33 +78,42 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex';
+
 export default {
-  name: "home",
+  name: 'home',
   data() {
     return {
       id: -1,
       posting: false,
       form: {
-        name: "",
-        content: ""
-      }
+        name: '',
+        content: '',
+      },
     };
   },
   computed: {
-    ...mapState("shops", ["data", "errorMsg"])
+    ...mapState('auth', ['userData', 'isSuperUser']),
+    ...mapState('shops', ['data', 'errorMsg']),
   },
   mounted() {
     this.getAllShops();
+    this.getUserInfo();
   },
   methods: {
+    adminOrUserCanEdit(item) {
+      return (this.isSuperUser || item.user.split('/')[5] == this.userData.pk);
+    },
+    getUserInfo() {
+      this.$store.dispatch('auth/getAccountDetails');
+    },
     getAllShops() {
-      this.$store.dispatch("shops/getAllShops");
+      this.$store.dispatch('shops/getAllShops');
     },
     addNewShop() {
       this.id = -1;
-      this.form.name = "";
-      this.form.content = "";
+      this.form.name = '';
+      this.form.content = '';
       this.showModal();
     },
     editShop(item) {
@@ -111,16 +126,16 @@ export default {
     async saveData() {
       this.posting = true;
       if (this.id == -1) {
-        let rt = await this.$store.dispatch("shops/addNewShop", this.form);
+        const rt = await this.$store.dispatch('shops/addNewShop', this.form);
         this.posting = false;
         if (rt) {
           this.hideModal();
           this.getAllShops();
         }
       } else {
-        let rt = await this.$store.dispatch("shops/updateShop", {
+        const rt = await this.$store.dispatch('shops/updateShop', {
           id: this.id,
-          data: this.form
+          data: this.form,
         });
         this.posting = false;
         if (rt) {
@@ -131,7 +146,7 @@ export default {
     },
     async confirmDelete() {
       this.posting = true;
-      let rt = await this.$store.dispatch("shops/removeShop", this.id);
+      const rt = await this.$store.dispatch('shops/removeShop', this.id);
       this.posting = false;
       if (rt) {
         this.closeConfirmModal();
@@ -139,19 +154,19 @@ export default {
       }
     },
     showModal() {
-      this.$refs["edit-modal"].show();
+      this.$refs['edit-modal'].show();
     },
     hideModal() {
-      this.$refs["edit-modal"].hide();
+      this.$refs['edit-modal'].hide();
     },
     removeShop(item) {
       this.id = item.id;
-      this.$refs["confirm-modal"].show();
+      this.$refs['confirm-modal'].show();
     },
     closeConfirmModal() {
-      this.$refs["confirm-modal"].hide();
-    }
-  }
+      this.$refs['confirm-modal'].hide();
+    },
+  },
 };
 </script>
 

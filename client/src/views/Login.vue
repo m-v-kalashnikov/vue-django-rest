@@ -64,12 +64,6 @@ export default {
       },
     };
   },
-  // computed: mapState('signup', [
-  //   'registrationCompleted',
-  //   'registrationError',
-  //   'registrationLoading',
-  //   'errorMsg',
-  // ]),
   computed: mapState('auth', [
     'error',
     'loading',
