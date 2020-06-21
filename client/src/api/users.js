@@ -12,5 +12,5 @@ export default {
   },
   remove(id) {
     return session.delete(`/api/users/${id}/`);
-  }
+  },
 };

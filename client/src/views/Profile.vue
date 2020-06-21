@@ -42,6 +42,7 @@
             v-model="form.email"
             type="email"
             required
+            readonly
             placeholder="Enter user email"
           ></b-form-input>
         </b-form-group>
@@ -54,29 +55,30 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex';
+
 export default {
-  name: "about",
+  name: 'about',
   data() {
     return {
-      msg: "",
+      msg: '',
       form: {
-        username: "",
-        first_name: "",
-        last_name: "",
-        email: ""
-      }
+        username: '',
+        first_name: '',
+        last_name: '',
+        email: '',
+      },
     };
   },
   computed: {
-    ...mapState("auth", ["userData", "errorMsg"])
+    ...mapState('auth', ['userData', 'errorMsg']),
   },
   mounted() {
     this.getUserInfo();
   },
   methods: {
     getUserInfo() {
-      this.$store.dispatch("auth/getAccountDetails").then(() => {
+      this.$store.dispatch('auth/getAccountDetails').then(() => {
         this.form.username = this.userData.username;
         this.form.first_name = this.userData.first_name;
         this.form.last_name = this.userData.last_name;
@@ -86,15 +88,15 @@ export default {
     async saveData(evt) {
       evt.preventDefault();
       this.posting = true;
-      this.msg = "";
-      let rt = await this.$store.dispatch("auth/updateUser", this.form);
+      this.msg = '';
+      const rt = await this.$store.dispatch('auth/updateUser', this.form);
       this.posting = false;
       if (rt) {
-        this.msg = "Updated profile.";
+        this.msg = 'Updated profile.';
       } else {
-        this.msg = "Failed to update profile.";
+        this.msg = 'Failed to update profile.';
       }
-    }
-  }
+    },
+  },
 };
 </script>
