@@ -5,7 +5,7 @@ const initialState = {
   loading: false,
   error: false,
   data: null,
-  errorMsg: ""
+  errorMsg: '',
 };
 
 const getters = {
@@ -26,7 +26,7 @@ const actions = {
       users.update(id, data)
         .then(() => {
           commit(LOADING_SUCCESS);
-          return resolve(true)
+          return resolve(true);
         })
         .catch((err) => {
           console.log(err.response.data.detail);
@@ -41,7 +41,7 @@ const actions = {
       users.remove(id)
         .then(() => {
           commit(LOADING_SUCCESS);
-          return resolve(true)
+          return resolve(true);
         })
         .catch((err) => {
           console.log(err.response.data.detail);
@@ -49,16 +49,16 @@ const actions = {
           return resolve(false);
         });
     });
-  }
+  },
 };
 
 const mutations = {
   [LOADING_START](state) {
     state.loading = true;
     state.error = false;
-    state.errorMsg = "";
+    state.errorMsg = '';
   },
-  [LOADING_FAILURE](state, errorMsg = "") {
+  [LOADING_FAILURE](state, errorMsg = '') {
     state.loading = false;
     state.error = true;
     state.errorMsg = errorMsg;

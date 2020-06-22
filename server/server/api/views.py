@@ -10,7 +10,7 @@ from django.http.response import JsonResponse
 import json
 
 from .permissions import (
-    AdminOrUserCanEdit,
+    AdminOrUserCanEdit, AdminOrMeCanEdit,
 )
 from .models import (
     User,
@@ -28,6 +28,7 @@ class UserViewSet(ModelViewSet):
 
     permission_classes = (
         IsAuthenticated,
+        AdminOrMeCanEdit,
     )
 
     @detail_route(methods=['get'])

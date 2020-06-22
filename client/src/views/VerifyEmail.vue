@@ -41,3 +41,14 @@ export default {
   },
 };
 </script>
+
+<style>
+#activate-account-view {
+  min-height: calc(100vh - 66px);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+</style>

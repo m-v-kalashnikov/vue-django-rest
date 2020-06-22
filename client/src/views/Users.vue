@@ -23,7 +23,7 @@
             <b-button variant="success" class="mr-2" size="sm" @click="editUser(item)">
               <i class="fas fa-edit" />
             </b-button>
-            <b-button variant="danger" size="sm" @click="removeShop(item)">
+            <b-button variant="danger" size="sm" @click="removeUser(item)">
               <i class="fas fa-trash" />
             </b-button>
           </td>
@@ -104,31 +104,32 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex';
+
 export default {
-  name: "about",
+  name: 'about',
   data() {
     return {
       id: -1,
       posting: false,
       form: {
-        username: "",
-        first_name: "",
-        last_name: "",
-        nick_name: "",
-        phone: ""
-      }
+        username: '',
+        first_name: '',
+        last_name: '',
+        nick_name: '',
+        phone: '',
+      },
     };
   },
   computed: {
-    ...mapState("users", ["data", "errorMsg"])
+    ...mapState('users', ['data', 'errorMsg']),
   },
   mounted() {
     this.getAllUsers();
   },
   methods: {
     getAllUsers() {
-      this.$store.dispatch("users/getAllUsers");
+      this.$store.dispatch('users/getAllUsers');
     },
     editUser(item) {
       this.id = item.id;
@@ -142,9 +143,9 @@ export default {
 
     async saveData() {
       this.posting = true;
-      let rt = await this.$store.dispatch("users/updateUser", {
+      const rt = await this.$store.dispatch('users/updateUser', {
         id: this.id,
-        data: this.form
+        data: this.form,
       });
       this.posting = false;
       if (rt) {
@@ -154,7 +155,7 @@ export default {
     },
     async confirmDelete() {
       this.posting = true;
-      let rt = await this.$store.dispatch("users/removeUser", this.id);
+      const rt = await this.$store.dispatch('users/removeUser', this.id);
       this.posting = false;
       if (rt) {
         this.closeConfirmModal();
@@ -162,18 +163,18 @@ export default {
       }
     },
     showModal() {
-      this.$refs["edit-modal"].show();
+      this.$refs['edit-modal'].show();
     },
     hideModal() {
-      this.$refs["edit-modal"].hide();
+      this.$refs['edit-modal'].hide();
     },
-    removeShop(item) {
+    removeUser(item) {
       this.id = item.id;
-      this.$refs["confirm-modal"].show();
+      this.$refs['confirm-modal'].show();
     },
     closeConfirmModal() {
-      this.$refs["confirm-modal"].hide();
-    }
-  }
+      this.$refs['confirm-modal'].hide();
+    },
+  },
 };
 </script>

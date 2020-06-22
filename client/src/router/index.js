@@ -35,6 +35,19 @@ const requireUnauthenticated = (to, from, next) => {
     });
 };
 
+const requireAdminAndAuthenticated = (to, from, next) => {
+  store.dispatch('auth/initialize')
+    .then(() => {
+      if (!store.getters['auth/isAuthenticated']) {
+        next('/login');
+      } else if (!store.getters['auth/isSuperUser']) {
+        next('/you-shell-not-pass');
+      } else {
+        next();
+      }
+    });
+};
+
 const redirectLogout = (to, from, next) => {
   store.dispatch('auth/logout')
     .then(() => next('/login'));
@@ -52,7 +65,7 @@ export default new Router({
     {
       path: '/users',
       component: Users,
-      beforeEnter: requireAuthenticated,
+      beforeEnter: requireAdminAndAuthenticated,
     },
     {
       path: '/profile',
